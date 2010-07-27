@@ -1010,6 +1010,7 @@ static int msm_get_stats(struct msm_sync *sync, void __user *arg)
 		se.ctrl_cmd.resp_fd = ctrl->resp_fd;
 		break;
 
+#ifdef CONFIG_MSM_CAMERA_V4L2
 	case MSM_CAM_Q_V4L2_REQ:
 		/* control command from v4l2 client */
 		ctrl = (struct msm_ctrl_cmd *)(qcmd->command);
@@ -1032,6 +1033,7 @@ static int msm_get_stats(struct msm_sync *sync, void __user *arg)
 		se.ctrl_cmd.type   = ctrl->type;
 		se.ctrl_cmd.length = ctrl->length;
 		break;
+#endif
 
 	default:
 		rc = -EFAULT;
@@ -2456,6 +2458,7 @@ static int msm_open_control(struct inode *inode, struct file *filep)
 	return rc;
 }
 
+#ifdef CONFIG_MSM_CAMERA_V4L2
 static int __msm_v4l2_control(struct msm_sync *sync,
 		struct msm_ctrl_cmd *out)
 {
@@ -2492,6 +2495,7 @@ end:
 	CDBG("%s: rc %d\n", __func__, rc);
 	return rc;
 }
+#endif
 
 static const struct file_operations msm_fops_config = {
 	.owner = THIS_MODULE,
@@ -2717,7 +2721,7 @@ error:
 	return ret;
 }
 
-
+#ifdef CONFIG_MSM_CAMERA_V4L2
 int msm_v4l2_register(struct msm_v4l2_driver *drv)
 {
 	/* FIXME: support multiple sensors */
@@ -2744,6 +2748,7 @@ int msm_v4l2_unregister(struct msm_v4l2_driver *drv)
 	return 0;
 }
 EXPORT_SYMBOL(msm_v4l2_unregister);
+#endif
 
 static int msm_sync_init(struct msm_sync *sync,
 		struct platform_device *pdev,
