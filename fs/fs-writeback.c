@@ -92,7 +92,7 @@ static inline void bdi_work_init(struct bdi_work *work,
  */
 int writeback_in_progress(struct backing_dev_info *bdi)
 {
-	return !list_empty(&bdi->work_list);
+	return test_bit(BDI_writeback_running, &bdi->state);
 }
 
 static void bdi_work_clear(struct bdi_work *work)
@@ -872,6 +872,7 @@ long wb_do_writeback(struct bdi_writeback *wb, int force_wait)
 	struct bdi_work *work;
 	long wrote = 0;
 
+	set_bit(BDI_writeback_running, &wb->bdi->state);
 	while ((work = get_next_work_item(bdi, wb)) != NULL) {
 		struct wb_writeback_args args = work->args;
 
@@ -902,6 +903,7 @@ long wb_do_writeback(struct bdi_writeback *wb, int force_wait)
 	 * Check for periodic writeback, kupdated() style
 	 */
 	wrote += wb_check_old_data_flush(wb);
+	clear_bit(BDI_writeback_running, &wb->bdi->state);
 
 	return wrote;
 }
