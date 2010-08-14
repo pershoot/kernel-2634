@@ -43,9 +43,10 @@ ENTRY(msm_pm_collapse)
 	stmia   r0!, {r1-r9, ip}
 
 #ifdef CONFIG_VFP
+        .fpu	neon
 	VFPFSTMIA r0, r1              /* Save VFP working registers */
-//	fmrx    r1, fpexc
-//	fmrx    r2, fpscr
+	fmrx    r1, fpexc
+	fmrx    r2, fpscr
 	stmia   r0!, {r1, r2}         /* Save VFP state registers */
 #endif
 	bl      v7_flush_dcache_all
@@ -114,7 +115,7 @@ ENTRY(msm_pm_collapse_exit)
 	mcr     p15, 0, r2, c1, c0, 2 /* Write CPACR */
 	isb
 	mov     r2, #0x40000000       /* Enable VFP */
-//	fmxr    fpexc, r2
+	fmxr    fpexc, r2
 	isb
 	ldmdb   r1!, {r2, r3}         /* Read saved VFP state registers */
 	sub     r1, r1, #32*8         /* Jump to start of vfp regs area */
@@ -122,8 +123,8 @@ ENTRY(msm_pm_collapse_exit)
 				       * r1 incremented to end of vfp
 				       * regs area */
 	sub     r1, r1, #32*8         /* Jump back to start of vfp regs area */
-//	fmxr    fpscr, r3             /* Restore FPSCR */
-//	fmxr    fpexc, r2             /* Restore FPEXC last */
+	fmxr    fpscr, r3             /* Restore FPSCR */
+	fmxr    fpexc, r2             /* Restore FPEXC last */
 #endif
 	ldmdb   r1!, {r2-r11}
 	mcr     p15, 0, r4, c3, c0, 0 /* dacr */

@@ -8,7 +8,7 @@
 # EXTRA_AFLAGS := -DDEBUG
 
 #KBUILD_AFLAGS	:=$(KBUILD_AFLAGS:-msoft-float=-Wa,-mfpu=softvfp+vfp)
-KBUILD_AFLAGS	:=$(KBUILD_AFLAGS:-msoft-float=-Wa,-mfpu=neon)
+KBUILD_AFLAGS	:=$(KBUILD_AFLAGS:-mfpu=neon -mfloat-abi=hard)
 LDFLAGS		+=--no-warn-mismatch
 
 obj-y			+= vfp.o
