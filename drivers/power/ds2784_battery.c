@@ -452,7 +452,10 @@ static int battery_adjust_charge_state(struct ds2784_device_info *di)
 	 * to 100)
 	 * Oddly, only Passion is for 99% cycles, HTC
 	 * set the Bravo to 95%.
+         *
+         * Set 99 for Passion - pershoot
 	 */
+
 	if (di->status.percentage < 99) {
 		di->status.battery_full = 0;
 	}
