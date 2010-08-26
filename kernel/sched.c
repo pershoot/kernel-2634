@@ -714,7 +714,7 @@ sched_feat_write(struct file *filp, const char __user *ubuf,
 {
 	char buf[64];
 	char *cmp = buf;
-	int neg = 0;
+	int neg = 0, cmplen;
 	int i;
 
 	if (cnt > 63)
@@ -724,15 +724,24 @@ sched_feat_write(struct file *filp, const char __user *ubuf,
 		return -EFAULT;
 
 	buf[cnt] = 0;
+	for (i = 0; i < cnt; i++) {
+		if (buf[i] == '\n' || buf[i] == ' ') {
+			buf[i] = 0;
+			break;
+		}
+	}
 
 	if (strncmp(buf, "NO_", 3) == 0) {
 		neg = 1;
 		cmp += 3;
 	}
 
+	cmplen = strlen(cmp);
 	for (i = 0; sched_feat_names[i]; i++) {
 		int len = strlen(sched_feat_names[i]);
 
+		if (cmplen != len)
+			continue;
 		if (strncmp(cmp, sched_feat_names[i], len) == 0) {
 			if (neg)
 				sysctl_sched_features &= ~(1UL << i);
