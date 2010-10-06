@@ -90,6 +90,18 @@ static int __init msm_cpufreq_init(struct cpufreq_policy *policy)
 
 	BUG_ON(cpufreq_frequency_table_cpuinfo(policy, table));
 	policy->cur = acpuclk_get_rate();
+	/*Set custom max*/
+#ifdef DEFAULT_SCALING_MAX_FREQ_OVERIDE
+    if(DEFAULT_SCALING_MAX_FREQ_OVERIDE < policy->max){
+		if(msm_cpufreq_target(policy,
+		                      DEFAULT_SCALING_MAX_FREQ_OVERIDE,
+		                      CPUFREQ_RELATION_L) == 0){
+			printk("Overide default SCALING_MAX_FREQ: %d\n",
+			       DEFAULT_SCALING_MAX_FREQ_OVERIDE);
+			policy->max=DEFAULT_SCALING_MAX_FREQ_OVERIDE;
+		}
+	}
+#endif
 	policy->cpuinfo.transition_latency =
 		acpuclk_get_switch_time() * NSEC_PER_USEC;
 	return 0;
