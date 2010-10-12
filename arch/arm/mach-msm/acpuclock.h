@@ -20,6 +20,9 @@
 #ifndef __ARCH_ARM_MACH_MSM_ACPUCLOCK_H
 #define __ARCH_ARM_MACH_MSM_ACPUCLOCK_H
 
+/**Overide default scaling_max_freq */
+#define DEFAULT_SCALING_MAX_FREQ_OVERIDE 576000
+
 int acpuclk_set_rate(unsigned long rate, int for_power_collapse);
 unsigned long acpuclk_get_rate(void);
 uint32_t acpuclk_get_switch_time(void);

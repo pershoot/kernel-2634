@@ -1386,11 +1386,6 @@ dhd_watchdog_thread(void *data)
 			}
 			/* Count the tick for reference */
 			dhd->pub.tickcnt++;
-
-			/* Reschedule the watchdog */
-			if (dhd->wd_timer_valid)
-				mod_timer(&dhd->timer, jiffies + dhd_watchdog_ms * HZ / 1000);
-
 			dhd_os_wake_unlock(&dhd->pub);
 		}
 		else
@@ -1408,6 +1403,12 @@ dhd_watchdog(ulong data)
 	dhd_os_wake_lock(&dhd->pub);
 	if (dhd->watchdog_pid >= 0) {
 		up(&dhd->watchdog_sem);
+
+		/* Reschedule the watchdog */
+		if (dhd->wd_timer_valid) {
+				mod_timer(&dhd->timer, jiffies + dhd_watchdog_ms * HZ / 1000);
+		}
+		dhd_os_wake_unlock(&dhd->pub);
 		return;
 	}
 
