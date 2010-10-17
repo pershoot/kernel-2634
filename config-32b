@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.34.7
-# Mon Sep 13 13:36:36 2010
+# Sun Oct 17 12:49:00 2010
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -1591,6 +1591,7 @@ CONFIG_YAFFS_SHORT_NAMES_IN_RAM=y
 # CONFIG_YAFFS_EMPTY_LOST_AND_FOUND is not set
 # CONFIG_YAFFS_DISABLE_BLOCK_REFRESHING is not set
 # CONFIG_YAFFS_DISABLE_BACKGROUND is not set
+CONFIG_YAFFS_XATTR=y
 # CONFIG_JFFS2_FS is not set
 # CONFIG_LOGFS is not set
 # CONFIG_CRAMFS is not set
