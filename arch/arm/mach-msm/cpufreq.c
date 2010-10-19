@@ -22,29 +22,6 @@
 #include <linux/init.h>
 #include "acpuclock.h"
 
-#ifdef CONFIG_MSM_CPU_FREQ_SCREEN
-static void msm_early_suspend(struct early_suspend *handler) {
-	acpuclk_set_rate(CONFIG_MSM_CPU_FREQ_SCREEN_OFF * 1000, 0);
-}
-
-static void msm_late_resume(struct early_suspend *handler) {
-	acpuclk_set_rate(CONFIG_MSM_CPU_FREQ_SCREEN_ON * 1000, 0);
-}
-
-static struct early_suspend msm_power_suspend = {
-	.suspend = msm_early_suspend,
-	.resume = msm_late_resume,
-};
-
-static int __init clock_late_init(void)
-{
-	register_early_suspend(&msm_power_suspend);
-	return 0;
-}
-
-late_initcall(clock_late_init);
-#else
-
 static int msm_cpufreq_target(struct cpufreq_policy *policy,
 				unsigned int target_freq,
 				unsigned int relation)
@@ -90,17 +67,12 @@ static int __init msm_cpufreq_init(struct cpufreq_policy *policy)
 
 	BUG_ON(cpufreq_frequency_table_cpuinfo(policy, table));
 	policy->cur = acpuclk_get_rate();
-	/*Set custom max*/
-#ifdef DEFAULT_SCALING_MAX_FREQ_OVERIDE
-    if(DEFAULT_SCALING_MAX_FREQ_OVERIDE < policy->max){
-		if(msm_cpufreq_target(policy,
-		                      DEFAULT_SCALING_MAX_FREQ_OVERIDE,
-		                      CPUFREQ_RELATION_L) == 0){
-			printk("Overide default SCALING_MAX_FREQ: %d\n",
-			       DEFAULT_SCALING_MAX_FREQ_OVERIDE);
-			policy->max=DEFAULT_SCALING_MAX_FREQ_OVERIDE;
-		}
-	}
+
+#ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
+		policy->min = CONFIG_MSM_CPU_FREQ_MIN;
+		policy->max = CONFIG_MSM_CPU_FREQ_MAX;
+		printk("CPU Default %d/%d",CONFIG_MSM_CPU_FREQ_MAX,
+		                           CONFIG_MSM_CPU_FREQ_MIN);
 #endif
 	policy->cpuinfo.transition_latency =
 		acpuclk_get_switch_time() * NSEC_PER_USEC;
@@ -128,4 +100,3 @@ static int __init msm_cpufreq_register(void)
 }
 
 device_initcall(msm_cpufreq_register);
-#endif
