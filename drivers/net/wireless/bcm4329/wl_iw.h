@@ -47,7 +47,7 @@
 #define BAND_SET_CMD				"SETBAND"
 #define DTIM_SKIP_GET_CMD			"DTIMSKIPGET"
 #define DTIM_SKIP_SET_CMD			"DTIMSKIPSET"
-#define SETSUSPEND_CMD				"SETSUSPEND"
+#define SETSUSPEND_CMD				"SETSUSPENDOPT"
 #define PNOSSIDCLR_SET_CMD			"PNOSSIDCLR"
 #define PNOSETUP_SET_CMD			"PNOSETUP "
 #define PNOENABLE_SET_CMD			"PNOFORCE"
@@ -225,9 +225,9 @@ extern int dhd_dev_pno_enable(struct net_device *dev,  int pfn_enabled);
 extern int dhd_dev_get_pno_status(struct net_device *dev);
 
 #define PNO_TLV_PREFIX			'S'
-#define PNO_TLV_VERSION			1
-#define PNO_TLV_SUBVERSION 		1
-#define PNO_TLV_RESERVED		0
+#define PNO_TLV_VERSION			'1'
+#define PNO_TLV_SUBVERSION 		'2'
+#define PNO_TLV_RESERVED		'0'
 #define PNO_TLV_TYPE_SSID_IE		'S'
 #define PNO_TLV_TYPE_TIME		'T'
 #define  PNO_EVENT_UP			"PNO_EVENT"
